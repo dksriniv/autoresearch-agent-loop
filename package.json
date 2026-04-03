@@ -1,0 +1,17 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "Simple Express portfolio site",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "benchmark": "node benchmark.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "puppeteer": "^24.40.0"
+  }
+}
