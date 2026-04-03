@@ -23,7 +23,8 @@ html {
 
 body {
   margin: 0;
-  font-family: "Manrope", sans-serif;
+  font-family:
+    "Avenir Next", Avenir, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: var(--text);
   background:
     radial-gradient(circle at top left, rgba(217, 180, 143, 0.5), transparent 28%),
@@ -44,8 +45,7 @@ a {
   position: sticky;
   top: 0;
   z-index: 10;
-  backdrop-filter: blur(18px);
-  background: rgba(245, 239, 230, 0.72);
+  background: rgba(245, 239, 230, 0.94);
   border-bottom: 1px solid var(--line);
 }
 
@@ -68,7 +68,7 @@ a {
 h1,
 h2,
 h3 {
-  font-family: "Fraunces", serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 .brand {
@@ -87,6 +87,21 @@ h3 {
 
 .section-shell {
   padding: 4.5rem 0;
+}
+
+.about,
+.projects,
+.site-footer {
+  content-visibility: auto;
+}
+
+.about,
+.projects {
+  contain-intrinsic-size: 900px;
+}
+
+.site-footer {
+  contain-intrinsic-size: 120px;
 }
 
 .hero {

@@ -3,9 +3,19 @@ const path = require("path");
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, "public")));
+app.disable("etag");
+
+app.use(
+  express.static(path.join(__dirname, "public"), {
+    etag: false,
+    lastModified: false,
+    maxAge: "1h",
+    immutable: true,
+  }),
+);
 
 app.get("/", (_req, res) => {
+  res.set("Cache-Control", "public, max-age=60");
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 

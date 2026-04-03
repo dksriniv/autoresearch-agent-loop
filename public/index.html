@@ -4,12 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Autoresearch Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
@@ -39,8 +33,13 @@
         <div class="hero-image-wrap">
           <img
             class="hero-image"
-            src="https://picsum.photos/id/1043/1200/800"
+            src="/images/hero.jpg"
             alt="Mountain lake landscape"
+            width="1200"
+            height="800"
+            fetchpriority="high"
+            loading="eager"
+            decoding="async"
           />
         </div>
       </section>
@@ -53,8 +52,12 @@
         <div class="about-grid">
           <img
             class="profile-photo"
-            src="https://picsum.photos/id/1005/500/500"
+            src="/images/profile.jpg"
             alt="Profile portrait"
+            width="500"
+            height="500"
+            loading="lazy"
+            decoding="async"
           />
           <p class="about-text">
             I build practical digital experiences with a strong bias toward clear
@@ -73,7 +76,15 @@
         </div>
         <div class="project-grid">
           <article class="project-card">
-            <img src="https://picsum.photos/id/1015/600/400" alt="River valley" />
+            <img
+              src="/images/project-1.jpg"
+              alt="River valley"
+              width="600"
+              height="400"
+              loading="lazy"
+              fetchpriority="low"
+              decoding="async"
+            />
             <div class="card-copy">
               <h3>Field Notes</h3>
               <p>
@@ -83,7 +94,15 @@
             </div>
           </article>
           <article class="project-card">
-            <img src="https://picsum.photos/id/1025/600/400" alt="Dog portrait" />
+            <img
+              src="/images/project-2.jpg"
+              alt="Dog portrait"
+              width="600"
+              height="400"
+              loading="lazy"
+              fetchpriority="low"
+              decoding="async"
+            />
             <div class="card-copy">
               <h3>Studio Journal</h3>
               <p>
@@ -93,7 +112,15 @@
             </div>
           </article>
           <article class="project-card">
-            <img src="https://picsum.photos/id/1035/600/400" alt="Coastal scene" />
+            <img
+              src="/images/project-3.jpg"
+              alt="Coastal scene"
+              width="600"
+              height="400"
+              loading="lazy"
+              fetchpriority="low"
+              decoding="async"
+            />
             <div class="card-copy">
               <h3>Launch Canvas</h3>
               <p>
@@ -103,7 +130,15 @@
             </div>
           </article>
           <article class="project-card">
-            <img src="https://picsum.photos/id/1067/600/400" alt="Foggy forest" />
+            <img
+              src="/images/project-4.jpg"
+              alt="Foggy forest"
+              width="600"
+              height="400"
+              loading="lazy"
+              fetchpriority="low"
+              decoding="async"
+            />
             <div class="card-copy">
               <h3>Signal Board</h3>
               <p>

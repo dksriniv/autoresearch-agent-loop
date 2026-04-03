@@ -1,0 +1,9 @@
+run_tag	attempt	change	status	mean_wall_ms	p50_wall_ms	p95_wall_ms	notes
+apr3-speed	baseline	external_google_fonts_and_remote_picsum_images	ok	1116.5	997.3	1596.6	initial baseline from benchmark.mjs with 5 runs
+apr3-speed	1	remove_google_fonts_lazy_load_noncritical_images	ok	948.2	996.5	1140.5	removed external font CSS and deferred noncritical images
+apr3-speed	2	localize_picsum_images	ok	952.8	996.3	998.1	served picsum photos from local static files to remove external image requests
+apr3-speed	3	recompress_local_images	ok	949.9	996.6	997.6	resized and recompressed local jpg assets to better match rendered size
+apr3-speed	4	reduce_paint_cost	ok	949.0	995.7	996.0	removed nav blur and deferred below-the-fold section rendering
+apr3-speed	5	add_static_cache_headers	ok	942.4	992.8	993.7	disabled etags and added cache directives for static assets
+apr3-speed	6	preload_hero_image	reverted	944.7	991.3	994.5	preload slightly worsened mean and p95 so it was removed
+apr3-speed	7	cache_html_for_short_repeat_views	ok	942.6	990.8	994.0	short-lived document caching kept mean flat and improved median slightly
