@@ -81,12 +81,18 @@ async function runBenchmark() {
     const results = [];
     for (let run = 1; run <= RUNS; run += 1) {
       const page = await browser.newPage();
-      const startedAt = performance.now();
+      const loadStartedAt = performance.now();
       const response = await page.goto(TARGET_URL, {
-        waitUntil: "networkidle0",
+        waitUntil: "load",
         timeout: 30_000,
       });
-      const endedAt = performance.now();
+      const loadEndedAt = performance.now();
+      const networkIdleStartedAt = performance.now();
+      await page.waitForNetworkIdle({
+        idleTime: 500,
+        timeout: 30_000,
+      });
+      const networkIdleEndedAt = performance.now();
 
       const metrics = await page.evaluate(() => {
         const nav = performance.getEntriesByType("navigation")[0];
@@ -104,7 +110,10 @@ async function runBenchmark() {
       const sample = {
         run,
         status: response?.status() ?? null,
-        wallTimeMs: Number((endedAt - startedAt).toFixed(1)),
+        wallTimeMs: Number((loadEndedAt - loadStartedAt).toFixed(1)),
+        networkIdleTimeMs: Number(
+          (loadEndedAt - loadStartedAt + (networkIdleEndedAt - networkIdleStartedAt)).toFixed(1),
+        ),
         domContentLoadedMs:
           metrics.domContentLoadedMs === null
             ? null
@@ -119,12 +128,13 @@ async function runBenchmark() {
 
       results.push(sample);
       console.log(
-        `run ${run}/${RUNS} status=${sample.status} wall=${sample.wallTimeMs}ms dcl=${sample.domContentLoadedMs}ms load=${sample.loadEventMs}ms cards=${sample.projectCards}`,
+        `run ${run}/${RUNS} status=${sample.status} wall=${sample.wallTimeMs}ms idle=${sample.networkIdleTimeMs}ms dcl=${sample.domContentLoadedMs}ms load=${sample.loadEventMs}ms cards=${sample.projectCards}`,
       );
       await page.close();
     }
 
     const wallTimes = results.map((sample) => sample.wallTimeMs);
+    const networkIdleTimes = results.map((sample) => sample.networkIdleTimeMs);
     const summary = {
       url: TARGET_URL,
       runs: RUNS,
@@ -133,6 +143,9 @@ async function runBenchmark() {
       p50WallTimeMs: percentile(wallTimes, 50),
       p95WallTimeMs: percentile(wallTimes, 95),
       maxWallTimeMs: Math.max(...wallTimes),
+      meanNetworkIdleTimeMs: Number(mean(networkIdleTimes).toFixed(1)),
+      p50NetworkIdleTimeMs: percentile(networkIdleTimes, 50),
+      p95NetworkIdleTimeMs: percentile(networkIdleTimes, 95),
     };
 
     console.log("");
