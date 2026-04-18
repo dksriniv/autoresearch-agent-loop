@@ -217,33 +217,91 @@ The current site now:
 - serves static assets with improved cache headers
 - includes a reproducible benchmark harness and experiment log
 
-Current optimized commit history includes:
+## Apr 18 2026 Run Notes
 
-- `baseline: slow site`
-- `baseline: optimized`
+Work continued from `/opt/projects/autoresearch/website` on branch:
+
+- `autoresearch/apr18-speed`
+
+The first step was to re-establish a baseline on the current `main` implementation. That produced:
+
+- `mean_wall_ms`: `947.2`
+- `p50_wall_ms`: `994.4`
+- `p95_wall_ms`: `995.8`
+
+Two quick app-level attempts were then tested and reverted:
+
+1. Right-size and recompress the eager hero image
+2. Add an inline favicon to remove the extra `/favicon.ico` request
+
+Neither improved the original benchmark enough to keep.
+
+## Benchmark Harness Correction
+
+During the Apr 18 run, the benchmark was inspected more closely. A timed Puppeteer trace showed:
+
+- all actual page requests were completing in roughly `48 ms`
+- the reported `wall` metric was still landing near `990 ms`
+- the gap came from `waitUntil: "networkidle0"` rather than meaningful page work
+
+Because of that, `benchmark.mjs` was updated to:
+
+- measure primary `wallTimeMs` using `waitUntil: "load"`
+- keep a separate `networkIdleTimeMs` metric for diagnostics
+- continue reporting the existing navigation timings and content checks
+
+This was logged in `results.tsv` as:
+
+- `apr18-speed / 3 / refine_benchmark_to_measure_load_wall / ok`
+
+## Current Active Baseline
+
+After correcting the benchmark, a new load-based baseline was recorded.
+
+5-run calibrated baseline:
+
+- `mean_wall_ms`: `36.4`
+- `p50_wall_ms`: `36.9`
+- `p95_wall_ms`: `37.9`
+
+Then a 3-run calibration was recorded for the active short-loop workflow:
+
+- `mean_wall_ms`: `35.8`
+- `p50_wall_ms`: `35.3`
+- `p95_wall_ms`: `37.3`
+- `mean_network_idle_ms`: `538.0`
+
+The key takeaway is that actual page load completion is already fast locally, while the remaining `network idle` tail is a separate measurement artifact or secondary concern rather than the main user-facing bottleneck.
+
+## Apr 18 Experiments Logged
+
+These additional rows were added to `results.tsv` during the Apr 18 run:
+
+- `baseline current_main_baseline` -> `947.2 / 994.4 / 995.8`
+- `1 right_size_and_recompress_hero_image` -> reverted
+- `2 inline_favicon_to_remove_extra_request` -> reverted
+- `3 refine_benchmark_to_measure_load_wall` -> kept
+- `4 inline_stylesheet_into_document` -> reverted
+- `baseline-3run current_load_harness_baseline` -> `35.8 / 35.3 / 37.3`
+- `5 inline_favicon_again_on_load_harness` -> reverted
 
 ## Current Performance Summary
 
-The best measured result so far from the logged runs is:
+There are now two meaningful benchmark contexts in this repo:
 
-- `mean_wall_ms`: `942.4`
-- `p50_wall_ms`: `992.8`
-- `p95_wall_ms`: `993.7`
+1. Historical `networkidle0`-style results in the `~942-947 ms` range, useful for comparing against the earlier Apr 3 run log.
+2. Corrected load-based results in the `35-38 ms` range, which are the active baseline for future optimization attempts.
 
-Compared to baseline:
-
-- mean improved from `1116.5` to `942.4`
-- p95 improved from `1596.6` to `993.7`
-
-The page is now much more stable across runs, especially on the high tail.
+For future work, the corrected load-based benchmark should be treated as the primary decision metric.
 
 ## Important Observation
 
-At the end of the current optimization loop, the remaining wall time appears to be influenced heavily by the benchmark harness waiting on `networkidle0`, not only by real page work. That means future optimization effort may be better spent on:
+The main finding from the Apr 18 run is that benchmark methodology mattered more than additional page tweaks. The next meaningful improvements are more likely to come from:
 
-- refining the benchmark methodology
-- separating cold-load vs repeat-view measurements
-- capturing more meaningful frontend metrics such as LCP-like timings or resource timing summaries
+- separating cold-load and repeat-view scenarios explicitly
+- tracking resource-level timings or transfer summaries per run
+- increasing run counts when comparing sub-5 ms changes
+- only keeping app changes that beat the corrected load-based baseline, not the old inflated wall metric
 
 ## Git Notes
 

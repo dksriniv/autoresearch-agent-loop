@@ -7,3 +7,10 @@ apr3-speed	4	reduce_paint_cost	ok	949.0	995.7	996.0	removed nav blur and deferre
 apr3-speed	5	add_static_cache_headers	ok	942.4	992.8	993.7	disabled etags and added cache directives for static assets
 apr3-speed	6	preload_hero_image	reverted	944.7	991.3	994.5	preload slightly worsened mean and p95 so it was removed
 apr3-speed	7	cache_html_for_short_repeat_views	ok	942.6	990.8	994.0	short-lived document caching kept mean flat and improved median slightly
+apr18-speed	baseline	current_main_baseline	ok	947.2	994.4	995.8	initial baseline from benchmark.mjs with 5 runs on Apr 18 2026
+apr18-speed	1	right_size_and_recompress_hero_image	reverted	952.8	995.1	996.0	reducing the eager hero image size did not improve wall time, so the original asset was restored
+apr18-speed	2	inline_favicon_to_remove_extra_request	reverted	953.0	994.7	995.8	removing the favicon network request did not improve benchmark timings
+apr18-speed	3	refine_benchmark_to_measure_load_wall	ok	36.4	36.9	37.9	switched wall timing from networkidle0 inflation to load timing and added separate network-idle reporting
+apr18-speed	4	inline_stylesheet_into_document	reverted	37.5	36.7	43.1	inlining CSS increased document cost and worsened p95 on the load-based benchmark
+apr18-speed	baseline-3run	current_load_harness_baseline	ok	35.8	35.3	37.3	recalibrated active baseline using 3 runs with the corrected load-based benchmark
+apr18-speed	5	inline_favicon_again_on_load_harness	reverted	36.5	36.1	37.9	inline favicon slightly reduced idle time but worsened mean and p95 load wall time
